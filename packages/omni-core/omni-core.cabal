@@ -19,7 +19,7 @@ library
     default-language:
         GHC2021
     ghc-options:
-        -Wall -Wcompat
+        -Wall -Wcompat -fwrite-ide-info
 
 test-suite omni-core-test
     type:             exitcode-stdio-1.0

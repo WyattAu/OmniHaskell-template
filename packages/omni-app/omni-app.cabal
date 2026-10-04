@@ -18,4 +18,4 @@ executable omni-app
     default-language:
         GHC2021
     ghc-options:
-        -Wall
+        -Wall -fwrite-ide-info
