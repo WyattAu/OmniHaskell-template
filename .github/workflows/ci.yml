@@ -62,7 +62,7 @@ jobs:
           ./scripts/fmt-check.sh
       - name: hlint
         run: |
-          curl -sSfL https://github.com/ndmitchell/hlint/releases/latest/download/hlint-x86_64-linux.tar.gz | tar xz
+          curl -sSfL https://github.com/ndmitchell/hlint/releases/download/v3.8/hlint-x86_64-linux.tar.gz | tar xz
           ./hlint-x86_64-linux/hlint .
 
   weeder:
