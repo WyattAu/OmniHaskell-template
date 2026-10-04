@@ -11,29 +11,22 @@ maintainer: wyatt_au@protonmail.com
 build-type: Simple
 
 library
-  exposed-modules:
-    Omni.Core
-  hs-source-dirs:
-    src
-  build-depends:
-    base >=4.17 && <5
-  default-language:
-    GHC2021
-  ghc-options:
-    -Wall -Wcompat -fwrite-ide-info
+  exposed-modules:  Omni.Core
+  hs-source-dirs:   src
+  build-depends:    base >=4.17 && <5
+  default-language: GHC2021
+  ghc-options:      -Wall -Wcompat -fwrite-ide-info
 
 test-suite omni-core-test
-  type: exitcode-stdio-1.0
-  main-is: Main.hs
-  hs-source-dirs:
-    test
+  type:             exitcode-stdio-1.0
+  main-is:          Main.hs
+  hs-source-dirs:   test
   build-depends:
-    base,
-    omni-core,
-    tasty,
-    tasty-hedgehog,
-    hedgehog,
-  default-language:
-    GHC2021
-  ghc-options:
-    -Wall -threaded -rtsopts "-with-rtsopts=-N"
+      base
+    , hedgehog
+    , omni-core
+    , tasty
+    , tasty-hedgehog
+
+  default-language: GHC2021
+  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
