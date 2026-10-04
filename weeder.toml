@@ -1,7 +1,6 @@
-# weeder — dead-code detection over hie files. Roots are the workspace's
-# public surface; everything unreachable from them is reported. Entries are
-# regexes over Module.declaration (TOML-escaped backslashes).
+# weeder — dead-code detection over the LIBRARY surface (hie files). Roots
+# are the library's public export surface; anything unreachable from them
+# is reported. Executables are smoke-tested by build + run instead.
 roots = [
   "^Omni\\.Core\\.",
-  "^Main\\.main$",
 ]
