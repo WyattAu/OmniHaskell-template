@@ -7,7 +7,7 @@ import Omni.Core (clamp, safeHead)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.Hedgehog (testProperty)
 
-genInts :: Hedgehog.Gen [Int]
+genInts :: Gen [Int]
 genInts = Gen.list (Range.linear 0 100) Gen.int
 
 -- | REQ-001: safeHead agrees with head exactly on non-empty lists and
