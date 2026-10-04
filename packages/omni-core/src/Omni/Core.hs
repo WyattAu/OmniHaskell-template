@@ -8,7 +8,7 @@ module Omni.Core (
   safeHead,
   -- * Bounded numbers
   clamp,
- )
+)
 where
 
 -- | REQ-001: total head — 'Nothing' instead of a crash on empty lists.
