@@ -18,7 +18,9 @@ prop_safeHeadTotal = property $ do
   xs <- forAll genInts
   case safeHead xs of
     Nothing -> uncons xs === Nothing
-    Just x -> fst <$> uncons xs === Just x
+    Just x -> do
+      fetched <- uncons xs
+      fst fetched === Just x
 
 -- | REQ-002: clamp output always within bounds for any lo/hi/x.
 prop_clampBounds :: Property
