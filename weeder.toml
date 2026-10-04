@@ -1,7 +1,8 @@
 # weeder — dead-code detection over hie files. Roots are the workspace's
 # public surface; everything unreachable from them is reported. Entries are
-# regexes over full declarations (TOML-escaped backslashes).
+# regexes over full declarations (TOML-escaped backslashes). Executable
+# entry points are declared as bare names (e.g. main).
 roots = [
   "^Omni\\.Core\\.",
-  "^Main\\.main$",
+  "^main$",
 ]
