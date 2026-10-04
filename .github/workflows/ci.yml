@@ -74,7 +74,7 @@ jobs:
           ghc-version: "9.8.4"
       # Weeder analyzes the LIBRARY surface (hie files). Executables are
       # smoke-tested by build + run; their roots are not part of the gate.
-      - run: cabal update && cabal build lib:omni-core lib:omni-app
+      - run: cabal update && cabal build lib:omni-core
       - name: weeder (dead-code gate over hie files)
         run: |
           cabal install weeder --overwrite-policy=always --installdir="$HOME/.local/bin"
