@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Hedgehog (Property, assert, forAll, property, (===))
+import Hedgehog (Gen, Property, assert, forAll, property, (===))
 import Hedgehog.Gen qualified as Gen
 import Hedgehog.Range qualified as Range
 import Omni.Core (clamp, safeHead)
