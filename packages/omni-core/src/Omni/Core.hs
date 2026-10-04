@@ -18,7 +18,7 @@ safeHead (x : _) = Just x
 
 -- | REQ-002: clamp @lo <= x <= hi@. Returns 'lo' when @lo > hi@
 -- (documented, not hidden).
-clamp :: Ord a => a -> a -> a -> a
+clamp :: (Ord a) => a -> a -> a -> a
 clamp lo hi
   | lo > hi = const lo
   | otherwise = max lo . min hi
