@@ -6,6 +6,7 @@
 module Omni.Core (
   -- * Total list access
   safeHead,
+
   -- * Bounded numbers
   clamp,
 )
