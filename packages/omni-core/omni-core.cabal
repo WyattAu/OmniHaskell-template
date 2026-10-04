@@ -1,14 +1,15 @@
 cabal-version: 3.0
-name: omni-core
-version: 0.1.0.0
-synopsis: Leaf primitives for the OmniHaskell workspace
+name:          omni-core
+version:       0.1.0.0
+synopsis:      Leaf primitives for the OmniHaskell workspace
 description:
   L0 pattern made concrete: zero workspace deps, total functions,
   property-tested (hedgehog), REQ-tagged.
-license: Apache-2.0
-author: Wyatt Au
-maintainer: wyatt_au@protonmail.com
-build-type: Simple
+
+license:       Apache-2.0
+author:        Wyatt Au
+maintainer:    wyatt_au@protonmail.com
+build-type:    Simple
 
 library
   exposed-modules:  Omni.Core
@@ -22,7 +23,7 @@ test-suite omni-core-test
   main-is:          Main.hs
   hs-source-dirs:   test
   build-depends:
-      base
+    , base
     , hedgehog
     , omni-core
     , tasty
