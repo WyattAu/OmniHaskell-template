@@ -2,3 +2,5 @@
 # public surface; everything unreachable from them is reported.
 roots:
   - "^Omni.Core$"
+
+roots = ["^Omni.Core$"]
