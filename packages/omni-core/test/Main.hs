@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Data.List (uncons)
 import Hedgehog (Gen, Property, assert, forAll, property, (===))
 import Hedgehog.Gen qualified as Gen
 import Hedgehog.Range qualified as Range
@@ -16,8 +17,8 @@ prop_safeHeadTotal :: Property
 prop_safeHeadTotal = property $ do
   xs <- forAll genInts
   case safeHead xs of
-    Nothing -> xs === []
-    Just x -> x === head xs
+    Nothing -> uncons xs === Nothing
+    Just x -> fst <$> uncons xs === Just x
 
 -- | REQ-002: clamp output always within bounds for any lo/hi/x.
 prop_clampBounds :: Property
@@ -38,7 +39,7 @@ tests =
     "Omni.Core"
      [ testProperty "safeHead total" prop_safeHeadTotal
      , testProperty "clamp bounds" prop_clampBounds
-      ]
+     ]
 
 main :: IO ()
 main = defaultMain tests

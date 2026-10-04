@@ -3,12 +3,12 @@
 -- The L0 pattern made concrete: zero workspace dependencies, total
 -- functions (returning 'Maybe' instead of partial ones), and
 -- requirement-tagged properties (see REQUIREMENTS.md at the repo root).
-module Omni.Core
-  ( -- * Total list access
-    safeHead,
-    -- * Bounded numbers
-    clamp,
-  )
+module Omni.Core (
+  -- * Total list access
+  safeHead,
+  -- * Bounded numbers
+  clamp,
+ )
 where
 
 -- | REQ-001: total head — 'Nothing' instead of a crash on empty lists.
