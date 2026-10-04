@@ -22,10 +22,20 @@ jobs:
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.8.4"
-      - run: cabal update && cabal haddock all --haddock-hyperlink-source --haddock-internal
+      - run: cabal update
+      - name: haddock
+        run: |
+          cabal haddock all --haddock-hyperlink-source --haddock-internal
+          # Stage robustly: cabal's doc dir depth varies across GHC/cabal
+          # versions, so find the html roots instead of hardcoding the path.
+          mkdir -p haddock-out
+          find dist-newstyle -type d -path '*/doc/html/*' | while read -r d; do
+            cp -r "$d"/. haddock-out/
+          done
+          ls haddock-out
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist-newstyle/build/*/*/*/doc/html
+          path: haddock-out
   deploy:
     needs: build
     runs-on: ubuntu-latest
