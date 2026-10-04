@@ -1,0 +1,6 @@
+# hlint — add hints with a reason; suppressions also need a reason.
+- warn: {lhs: "return x", rhs: "pure x"}   # prefer pure in modern code
+# Partial functions (head/tail/!!/fromJust) are avoided by design: the
+# leaf package ships total alternatives (Omni.Core.safeHead). Add specific
+# per-file ignores only with a comment explaining why the partial call is
+# provably safe.

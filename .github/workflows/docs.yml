@@ -1,0 +1,37 @@
+# Haddock, hyperlinked source, published to Pages.
+name: docs
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.8.4"
+      - run: cabal update && cabal haddock all --haddock-hyperlink-source --haddock-internal
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-newstyle/build/*/*/*/doc/html
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

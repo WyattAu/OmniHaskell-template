@@ -1,0 +1,26 @@
+{
+  // Image flavor: ghcup bootstraps the exact baseline (GHC 9.8 + HLS).
+  // First boot takes a while — it compiles nothing, only downloads tools.
+  "name": "OmniHaskell",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "postCreateCommand": "bash .devcontainer/ghcup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "haskell.haskell",
+        "tekumara.typos-vscode",
+        "EditorConfig.EditorConfig",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "haskell.toolchain": { "hls": "latest" },
+        "haskell.formattingProvider": "fourmolu",
+        "editor.formatOnSave": true
+      }
+    }
+  }
+}

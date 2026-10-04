@@ -1,0 +1,13 @@
+-- OmniHaskell monorepo: one project file, many packages. The repo is the
+-- unit of consistency; packages are the unit of reuse.
+packages:
+  packages/omni-core
+  packages/omni-app
+
+-- Guard against registry skew: never build against a partial Hackage index.
+index-state: 2026-10-01T00:00:00Z
+
+-- Estate parity: warnings are errors under CI; local builds can relax via
+-- cabal configure --ghc-options="-Wno-error".
+package *
+  ghc-options: -Werror

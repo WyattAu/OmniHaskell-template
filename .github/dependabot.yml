@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # No dependabot ecosystem for cabal — pin discipline comes from
+  # index-state in cabal.project and the monthly bitrot cron.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

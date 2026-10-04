@@ -1,0 +1,8 @@
+dist-newstyle/
+.hpc/
+*.hi
+*.o
+.direnv/
+/result
+result
+.env

@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug omni-app",
+      "type": "ghc",
+      "request": "launch",
+      "workspace": "${workspaceFolder}/packages/omni-app",
+      "startup": "${workspaceFolder}/packages/omni-app/app/Main.hs",
+      "args": ["world"]
+    }
+  ]
+}

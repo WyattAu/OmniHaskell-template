@@ -1,0 +1,11 @@
+# fourmolu — the estate formatter. CI runs `fourmolu --mode check`.
+indentation: 4
+column-limit: 100
+function-arrows: leading
+haddock-style: single-line
+let-style: inline
+in-style: left-align
+single-constraint-parens: always
+unicode: never
+respectful: true
+fixities: []

@@ -1,0 +1,28 @@
+# REQ-T-003: both devcontainer flavors must build and stay green.
+name: devcontainer
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - .devcontainer/devcontainer.json
+          - .devcontainer/nix/devcontainer.json
+    continue-on-error: ${{ contains(matrix.config, 'nix') }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx --yes @devcontainers/cli@latest build --workspace-folder . --config ${{ matrix.config }}

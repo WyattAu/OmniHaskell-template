@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose an improvement to the toolchain or scaffold.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can you not do today? Cite the gate or script that falls short.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Concrete change — file, target, workflow, or gate.
+    validations:
+      required: true
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Omni Core Contract
+      options:
+        - label: This does not violate the contract (scripts canonical, one source of truth per concern)
+          required: true

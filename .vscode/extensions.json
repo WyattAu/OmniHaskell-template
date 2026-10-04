@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "haskell.haskell",
+    "tekumara.typos-vscode",
+    "EditorConfig.EditorConfig",
+    "github.vscode-github-actions"
+  ]
+}

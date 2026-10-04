@@ -1,0 +1,44 @@
+# Tag → static-ish binaries for linux + macos, attested. Haskell has no
+# central binary registry: tags + CHANGELOG are the release (ADR-0003).
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  attestations: write
+  id-token: write
+
+jobs:
+  binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ghc: "9.8.4"
+          - os: macos-latest
+            ghc: "9.8.4"
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.repository_owner == 'WyattAu' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: ${{ matrix.ghc }}
+      - run: cabal update && cabal build all
+      - name: stage
+        run: |
+          BIN=$(cabal list-bin omni-app)
+          mkdir -p dist
+          cp "$BIN" dist/omni-app
+          strip dist/omni-app || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omni-app-${{ matrix.os }}
+          path: dist/
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/omni-app

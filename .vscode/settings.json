@@ -1,0 +1,8 @@
+{
+  "haskell.manageHLS": "PATH",
+  "haskell.formattingProvider": "fourmolu",
+  "haskell.plugin.fourmolu.formattingProvider": "on",
+  "editor.formatOnSave": true,
+  "[haskell]": { "editor.defaultFormatter": "haskell.haskell" },
+  "files.watcherExclude": { "**/dist-newstyle/**": true }
+}

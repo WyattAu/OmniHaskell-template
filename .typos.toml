@@ -1,0 +1,7 @@
+# typos-ci/typos — spell-check that understands code. Keep the allow list
+# short; add a word here only when the "typo" is actually a domain term.
+[default]
+extend-ignore-identifiers-re = []
+
+[files]
+extend-exclude = ["LICENSE"]

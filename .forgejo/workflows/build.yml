@@ -1,0 +1,16 @@
+# Self-hosted Forgejo mirror of the GitHub CI. The scripts are canonical
+# (Omni Core Contract), so this file stays a thin wrapper. Adjust runs-on to
+# your runner label if it is not the default docker label.
+name: build
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate (mirrors GitHub CI)
+        run: make ci
