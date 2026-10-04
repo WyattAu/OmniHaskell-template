@@ -8,7 +8,7 @@ import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.Hedgehog (testProperty)
 
 genInts :: Gen [Int]
-genInts = Gen.list (Range.linear 0 100) Gen.int
+genInts = Gen.list (Range.linear 0 100) (Gen.int (Range.linear 0 100))
 
 -- | REQ-001: safeHead agrees with head exactly on non-empty lists and
 -- returns Nothing on empty — never bottom.

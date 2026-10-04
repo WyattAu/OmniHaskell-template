@@ -1,6 +1,3 @@
 # weeder — dead-code detection over hie files. Roots are the workspace's
 # public surface; everything unreachable from them is reported.
-roots:
-  - "^Omni.Core$"
-
 roots = ["^Omni.Core$"]
