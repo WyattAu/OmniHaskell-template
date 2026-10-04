@@ -36,9 +36,9 @@ tests :: TestTree
 tests =
   testGroup
     "Omni.Core"
-    [ testProperty "safeHead total" prop_safeHeadTotal,
-      testProperty "clamp bounds" prop_clampBounds
-    ]
+     [ testProperty "safeHead total" prop_safeHeadTotal
+     , testProperty "clamp bounds" prop_clampBounds
+      ]
 
 main :: IO ()
 main = defaultMain tests
