@@ -1,21 +1,21 @@
-cabal-version:      3.0
-name:               omni-app
-version:            0.1.0.0
-synopsis:           Example executable composing on omni-core
-license:            Apache-2.0
-author:             Wyatt Au
-maintainer:         wyatt_au@protonmail.com
-build-type:         Simple
+cabal-version: 3.0
+name: omni-app
+version: 0.1.0.0
+synopsis: Example executable composing on omni-core
+license: Apache-2.0
+author: Wyatt Au
+maintainer: wyatt_au@protonmail.com
+build-type: Simple
 
 executable omni-app
-    main-is:
-        Main.hs
-    hs-source-dirs:
-        app
-    build-depends:
-        base,
-        omni-core,
-    default-language:
-        GHC2021
-    ghc-options:
-        -Wall -fwrite-ide-info
+  main-is:
+    Main.hs
+  hs-source-dirs:
+    app
+  build-depends:
+    base,
+    omni-core,
+  default-language:
+    GHC2021
+  ghc-options:
+    -Wall

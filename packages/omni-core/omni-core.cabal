@@ -1,38 +1,39 @@
-cabal-version:      3.0
-name:               omni-core
-version:            0.1.0.0
-synopsis:           Leaf primitives for the OmniHaskell workspace
-description:        L0 pattern made concrete: zero workspace deps, total
-                    functions, property-tested (hedgehog), REQ-tagged.
-license:            Apache-2.0
-author:             Wyatt Au
-maintainer:         wyatt_au@protonmail.com
-build-type:         Simple
+cabal-version: 3.0
+name: omni-core
+version: 0.1.0.0
+synopsis: Leaf primitives for the OmniHaskell workspace
+description:
+  L0 pattern made concrete: zero workspace deps, total functions,
+  property-tested (hedgehog), REQ-tagged.
+license: Apache-2.0
+author: Wyatt Au
+maintainer: wyatt_au@protonmail.com
+build-type: Simple
 
 library
-    exposed-modules:
-        Omni.Core
-    hs-source-dirs:
-        src
-    build-depends:
-        base >=4.17 && <5
-    default-language:
-        GHC2021
-    ghc-options:
-        -Wall -Wcompat -fwrite-ide-info
+  exposed-modules:
+    Omni.Core
+  hs-source-dirs:
+    src
+  build-depends:
+    base >=4.17 && <5
+  default-language:
+    GHC2021
+  ghc-options:
+    -Wall -Wcompat -fwrite-ide-info
 
 test-suite omni-core-test
-    type:             exitcode-stdio-1.0
-    main-is:          Main.hs
-    hs-source-dirs:
-        test
-    build-depends:
-        base,
-        omni-core,
-        tasty,
-        tasty-hedgehog,
-        hedgehog,
-    default-language:
-        GHC2021
-    ghc-options:
-        -Wall -threaded -rtsopts "-with-rtsopts=-N"
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+    test
+  build-depends:
+    base,
+    omni-core,
+    tasty,
+    tasty-hedgehog,
+    hedgehog,
+  default-language:
+    GHC2021
+  ghc-options:
+    -Wall -threaded -rtsopts "-with-rtsopts=-N"
