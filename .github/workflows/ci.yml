@@ -60,10 +60,12 @@ jobs:
           cabal install fourmolu cabal-fmt --overwrite-policy=always --installdir="$HOME/.local/bin"
           export PATH="$HOME/.local/bin:$PATH"
           ./scripts/fmt-check.sh
-      - name: hlint
+      - name: hlint (pinned)
         run: |
-          curl -sSfL https://github.com/ndmitchell/hlint/releases/download/v3.10/hlint-3.10-x86_64-linux.tar.gz | tar xz
-          ./hlint-x86_64-linux/hlint .
+          rm -rf /tmp/hlint && mkdir -p /tmp/hlint
+          curl -sSfL https://github.com/ndmitchell/hlint/releases/download/v3.10/hlint-3.10-x86_64-linux.tar.gz | tar xz -C /tmp/hlint
+          HLINT="$(find /tmp/hlint -type f -name hlint | head -1)"
+          "$HLINT" .
 
   weeder:
     runs-on: ubuntu-latest
