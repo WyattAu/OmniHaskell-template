@@ -1,0 +1,27 @@
+# Workflow security lint (zizmor) + dependency vulnerability scan (osv).
+# Both are ADVISORY (continue-on-error) until the estate tunes thresholds
+# (LOOP.md graduation policy).
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 8 * * 5" # Fridays 08:00 UTC
+
+permissions: read-all
+
+jobs:
+  zizmor:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: zizmor (GitHub Actions security lint)
+        uses: zizmorcore/zizmor-action@v0.1.2
+        with:
+          advanced-security: false
+false

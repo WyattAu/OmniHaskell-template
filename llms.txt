@@ -1,0 +1,15 @@
+# OmniHaskell-template
+
+> OmniHaskell-template: maximalist Omni family member. 
+
+Part of the WyattAu Omni template family: maximalist, monorepo-first
+scaffolds sharing one gate matrix (engineering-standards).
+
+## Docs
+
+- [README](https://github.com/WyattAu/OmniHaskell-template/blob/main/README.md): quick start + make targets
+- [ARCHITECTURE](https://github.com/WyattAu/$1/blob/main/ARCHITECTURE.md): why the repo is shaped this way
+- [OMNI-CORE](https://github.com/WyattAu/engineering-standards/blob/main/OMNI-CORE.md): the family-wide contract
+- [CONTRIBUTING](https://github.com/WyattAu/$1/blob/main/CONTRIBUTING.md): workflow rules
+- [AGENTS.md](https://github.com/WyattAu/$1/blob/main/AGENTS.md): instructions for AI agents
+- [engineering-standards](https://github.com/WyattAu/engineering-standards): the estate gate matrix

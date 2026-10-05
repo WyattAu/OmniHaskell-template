@@ -1,0 +1,32 @@
+# OpenSSF Scorecard — supply-chain security posture, advisory.
+# Results are an artifact (publish_results:false). Promote to badge +
+# published results after one green loop (LOOP.md graduation policy).
+name: scorecard
+on:
+  schedule:
+    - cron: "30 6 * * 3" # Wednesdays 06:30 UTC
+  push:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run analysis
+        uses: ossf/scorecard-action@v2.4.1
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scorecard-sarif
+          path: results.sarif
