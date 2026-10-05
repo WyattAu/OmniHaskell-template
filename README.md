@@ -62,3 +62,22 @@ CHANGELOG entry. Hackage publication is opt-in per package.
 ## License
 
 Apache-2.0 — commercial use expressly permitted.
+
+
+## Performance budgets
+
+Performance is a gate, not a hope. `make bench` measures, writes
+`bench/current.tsv`, and compares it against the committed
+`bench/baseline.tsv`; anything more than the threshold worse fails. The
+comparator (`scripts/compare-bench.py`) is identical across the whole Omni
+estate, so the policy is auditable in one place.
+
+| Verb | What it does |
+|---|---|
+| `make bench` | measure + compare (advisory job in CI: `perf`) |
+| `make bench-update` | deliberately re-baseline; the only way a baseline moves |
+
+The first run on a fresh clone records the baseline instead of failing, so the
+gate is meaningful from the second run onwards. Override the budget per run
+with `OMNI_BENCH_THRESHOLD_PCT=15 make bench`. Rationale and per-template
+metrics: `docs/adr/0006-performance-budget-gate.md`.

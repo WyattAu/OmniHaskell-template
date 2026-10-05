@@ -22,6 +22,8 @@ $2
 
 $3
 
+- `make bench` (perf budget vs committed baseline) / `make bench-update`
+
 ## Conventions
 
 - Commits: conventional prefixes (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).

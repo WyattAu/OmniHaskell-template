@@ -87,3 +87,18 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: ./scripts/check-contract.sh
+
+  # Loop 2: performance budget. Advisory for one loop, then graduates to a
+  # blocking gate (LOOP.md graduation policy). Same scripts/ commands the
+  # developer runs locally - never a CI-only measurement path.
+  perf:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.8.4"
+      - run: cabal update
+      - run: ./scripts/build.sh
+      - run: make bench

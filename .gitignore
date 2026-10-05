@@ -6,3 +6,8 @@ dist-newstyle/
 /result
 result
 .env
+
+# perf gate scratch artifacts (bench/baseline.tsv is tracked on purpose)
+bench/current.tsv
+bench/*-bench.json
+bench/go-bench.txt
