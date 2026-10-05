@@ -1,13 +1,12 @@
 {
   // Nix flavor: the container only needs to bootstrap Nix; the flake then
   // provides the exact toolchain. Keeps one source of truth (flake.nix).
-  "name": "OmniHaskell-template (nix + direnv)",
+  "name": "OmniHaskell-template (nix + flake shell)",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers-extra/features/nix:1": {}
+    "ghcr.io/devcontainers/features/common-utils:2": {}
   },
-  "postCreateCommand": "bash .devcontainer/nix/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/nix/bootstrap.sh && bash .devcontainer/nix/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": ["EditorConfig.EditorConfig", "github.vscode-github-actions", "kamadorueda.alejandra", "haskell.haskell"]
