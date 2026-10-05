@@ -35,7 +35,7 @@ jobs:
           mkdir -p dist
           cp "$BIN" dist/omni-app
           strip dist/omni-app || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: omni-app-${{ matrix.os }}
           path: dist/
