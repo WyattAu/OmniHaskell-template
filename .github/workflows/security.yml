@@ -24,4 +24,3 @@ jobs:
         uses: zizmorcore/zizmor-action@v0.1.2
         with:
           advanced-security: false
-false
