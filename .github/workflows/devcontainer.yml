@@ -22,7 +22,6 @@ jobs:
         config:
           - .devcontainer/devcontainer.json
           - .devcontainer/nix/devcontainer.json
-    continue-on-error: ${{ contains(matrix.config, 'nix') }}
     steps:
       - uses: actions/checkout@v7
       - run: npx --yes @devcontainers/cli@latest build --workspace-folder . --config ${{ matrix.config }}
