@@ -39,6 +39,6 @@ jobs:
         with:
           name: omni-app-${{ matrix.os }}
           path: dist/
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: dist/omni-app
