@@ -11,14 +11,13 @@ UPDATE=()
 [ "${1:-}" = "--update" ] && UPDATE=(--update)
 mkdir -p bench
 
-# Criterion owns the statistics; we own the policy (loop 4: the Haskell
-# template finally has a real microbenchmark instead of only a wall-clock
-# report). `--json` is criterion's machine output; `--time-limit` keeps the gate
-# short.
-OUT="$PWD/bench/criterion.json"
-mkdir -p bench
-cabal bench omni-core-bench --benchmark-options="--json $OUT --time-limit 0.5"
+# Criterion owns the statistics; we own the policy. The benchmark component is
+# kept out of the normal solver plan (see --disable-benchmarks in build.sh).
+# `--time-limit` keeps the gate short.
+cabal bench omni-core-bench --benchmark-options="--json $PWD/bench/criterion.json --time-limit 0.5"
 
+# criterion's JSON layout has changed between releases, so walk the tree for
+# entries that carry a mean instead of hard-coding a path.
 python3 - <<'PYEMIT' >"$CURRENT"
 import json
 import pathlib
@@ -29,23 +28,68 @@ if not path.exists():
     sys.exit(f"bench: criterion wrote no JSON at {path}")
 data = json.loads(path.read_text())
 
-# criterion's JSON is a list of report entries; tolerate a dict-of-entries too.
-entries = data if isinstance(data, list) else [dict(v, name=k) for k, v in data.items()]
-rows = []
-for entry in entries:
-    name = entry.get("name") or entry.get("reportName") or entry.get("id")
-    if not name:
-        continue
-    # criterion reports seconds; the gate works in nanoseconds.
-    mean = entry.get("mean") or entry.get("meanEstimate")
-    if mean is None:
-        continue
-    std_dev = entry.get("stdDev") or entry.get("std_dev") or 0.0
-    rows.append((name, float(mean) * 1e9, "ns", "gate", float(std_dev) * 1e9))
+MEAN_KEYS = ("mean", "meanEstimate", "estimate", "est")
+NAME_KEYS = ("name", "reportName", "benchmarkName", "id", "fullName")
+
+
+def mean_of(node):
+    """criterion reports seconds; nested dicts carry point_estimate/estimate."""
+    for key in MEAN_KEYS:
+        if key in node:
+            value = node[key]
+            if isinstance(value, dict):
+                for inner in ("point_estimate", "estimate", "centred", "mean"):
+                    if inner in value:
+                        return float(value[inner])
+                continue
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
+def name_of(node, fallback):
+    for key in NAME_KEYS:
+        value = node.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return fallback
+
+
+def walk(node, trail="report"):
+    if isinstance(node, dict):
+        mean = mean_of(node)
+        if mean is not None:
+            yield name_of(node, trail), mean, node
+            return
+        for key, value in node.items():
+            yield from walk(value, f"{trail}/{key}")
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from walk(value, f"{trail}[{index}]")
+
+
+def std_dev_of(node):
+    for key in ("stdDev", "std_dev", "stddev"):
+        value = node.get(key)
+        if isinstance(value, dict):
+            value = value.get("point_estimate")
+        if isinstance(value, (int, float)):
+            return float(value)
+    return 0.0
+
+
+rows = {}
+for name, seconds, node in walk(data):
+    rows[name] = (seconds * 1e9, std_dev_of(node) * 1e9)
+
 if not rows:
-    sys.exit("bench: could not parse criterion JSON; first keys: " + str(list(data[0].keys())[:12]))
-for name, value, unit, mode, noise in sorted(rows):
-    print(f"{name}\t{value:.3f}\t{unit}\t{mode}\t{noise:.3f}")
+    shape = list(data)[:8] if isinstance(data, dict) else [list(e)[:8] for e in data[:2]]
+    sys.exit(f"bench: could not parse criterion JSON; top-level shape: {shape}")
+
+for name, (value, noise) in sorted(rows.items()):
+    print(f"{name}\t{value:.3f}\tns\tgate\t{noise:.3f}")
 PYEMIT
 
 python3 scripts/compare-bench.py "$BASELINE" "$CURRENT" \
