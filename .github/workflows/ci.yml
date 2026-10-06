@@ -113,12 +113,11 @@ jobs:
       - uses: actions/checkout@v7
       - run: ./scripts/check-contract.sh
 
-  # Loop 2: performance budget. Advisory for one loop, then graduates to a
-  # blocking gate (LOOP.md graduation policy). Same scripts/ commands the
-  # developer runs locally - never a CI-only measurement path.
+  # Loop 2: performance budget - blocking since it stayed green for a full
+  # loop (LOOP.md graduation policy). Same scripts/ command a developer runs
+  # locally; never a CI-only measurement path.
   perf:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: haskell-actions/setup@v2
@@ -136,12 +135,12 @@ jobs:
       - run: ./scripts/build.sh
       - run: make bench
 
-  # Loop 3: determinism verification. Advisory for one loop, then blocking where
-  # the toolchain is deterministic (LOOP.md graduation policy). Same
-  # scripts/ command a developer runs locally.
+  # Loop 3: determinism verification - blocking since it stayed green for a
+  # full loop, and since measurement showed every toolchain in the estate is
+  # byte-reproducible (ADR: determinism verification). Same scripts/ command a
+  # developer runs locally.
   repro:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: haskell-actions/setup@v2

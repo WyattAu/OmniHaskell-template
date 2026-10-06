@@ -2,12 +2,12 @@
 # Reproducible-build check (loop 3): build twice from a clean state with a pinned
 # epoch and compare artifact hashes.
 #
-# MODE=report - "gate" for toolchains that are deterministic (a mismatch is a
+# MODE=gate - "gate" for toolchains that are deterministic (a mismatch is a
 # real finding), "report" for toolchains that embed timestamps by design (a
 # mismatch is printed and explained, never blocks). See the ADR.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-MODE=report
+MODE=gate
 EPOCH="${SOURCE_DATE_EPOCH:-$(git log -1 --pretty=%ct 2>/dev/null || echo 0)}"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
@@ -24,7 +24,7 @@ compare() {
     echo "  this toolchain is expected to be deterministic - fix the build" >&2
     exit 1
   fi
-  echo "  reported only: this toolchain embeds timestamps/build ids by design" >&2
+  echo "  reported only: " >&2
   exit 0
 }
 
