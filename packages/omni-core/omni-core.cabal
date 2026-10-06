@@ -31,3 +31,15 @@ test-suite omni-core-test
 
   default-language: GHC2021
   ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+
+benchmark omni-core-bench
+  type:             exitcode-stdio-1.0
+  main-is:          Main.hs
+  hs-source-dirs:   bench
+  build-depends:
+    , base
+    , criterion
+    , omni-core
+
+  default-language: GHC2021
+  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
