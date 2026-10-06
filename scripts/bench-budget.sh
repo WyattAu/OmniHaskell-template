@@ -22,7 +22,7 @@ start="$(now_ms)"
 ./scripts/test.sh >/dev/null
 end="$(now_ms)"
 
-printf 'test-ms\t%s\tms\tinfo\n' "$((end - start))" > "$CURRENT"
+printf 'test-ms\t%s\tms\tinfo\n' "$((end - start))" >"$CURRENT"
 
 python3 scripts/compare-bench.py "$BASELINE" "$CURRENT" \
   --threshold-pct "$THRESHOLD_PCT" "${UPDATE[@]+"${UPDATE[@]}"}"
