@@ -14,10 +14,6 @@ index-state: 2026-10-01T00:00:00Z
 -- cabal configure --ghc-options="-Wno-error".
 package omni-core
   ghc-options: -Werror
-  # Benchmarks stay out of the default plan so `cabal build`/`cabal test` never
-  # have to solve for criterion (which otherwise backtracks the whole plan).
-  # `make bench` opts in through a temporary cabal.project.local.
-  benchmarks: False
 
 package omni-app
   ghc-options: -Werror

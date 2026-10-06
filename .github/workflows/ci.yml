@@ -101,7 +101,7 @@ jobs:
           done
           echo "cabal update failed after 3 attempts" >&2
           exit 1
-      - run: cabal build lib:omni-core
+      - run: cabal build lib:omni-core --disable-benchmarks
       - name: weeder (dead-code gate over hie files)
         run: |
           cabal install weeder --overwrite-policy=always --installdir="$HOME/.local/bin"

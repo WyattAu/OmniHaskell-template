@@ -28,7 +28,7 @@ jobs:
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
-      - run: cabal update && cabal build all
+      - run: cabal update && cabal build all --disable-benchmarks
       - name: stage
         run: |
           BIN=$(cabal list-bin omni-app)

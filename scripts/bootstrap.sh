@@ -7,7 +7,7 @@ Manual toolchain (no nix):
        ghcup install ghc  9.8.4
        ghcup install cabal latest
        ghcup install hls  latest
-  2. cabal update && cabal build all
+  2. cabal update && cabal build all --disable-benchmarks
   3. make ci
 Prefer zero setup? Open the repo in a devcontainer, or `nix develop`.
 MSG

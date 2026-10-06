@@ -32,7 +32,7 @@ compare() {
 # so this gates. The comment stays because the assumption used to be the opposite
 # and was wrong.
 fingerprint() {
-  cabal build all >/dev/null
+  ./scripts/build.sh >/dev/null
   find dist-newstyle -name '*.hi' -print0 | sort -z | xargs -0 sha256sum | awk '{print $1, $2}'
 }
 a="$(fingerprint)"
