@@ -44,7 +44,15 @@ jobs:
             dist-newstyle
           key: cabal-${{ matrix.ghc }}-${{ hashFiles('cabal.project', '**/*.cabal') }}
           restore-keys: cabal-${{ matrix.ghc }}-
-      - run: cabal update
+      - name: cabal update (mirrors 403 intermittently; retry before failing)
+        run: |
+          for attempt in 1 2 3; do
+            if cabal update; then exit 0; fi
+            echo "cabal update attempt ${attempt} failed; retrying in 15s" >&2
+            sleep 15
+          done
+          echo "cabal update failed after 3 attempts" >&2
+          exit 1
       - run: make test
 
   style:
@@ -54,7 +62,15 @@ jobs:
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.8.4"
-      - run: cabal update
+      - name: cabal update (mirrors 403 intermittently; retry before failing)
+        run: |
+          for attempt in 1 2 3; do
+            if cabal update; then exit 0; fi
+            echo "cabal update attempt ${attempt} failed; retrying in 15s" >&2
+            sleep 15
+          done
+          echo "cabal update failed after 3 attempts" >&2
+          exit 1
       - name: fmt check
         run: |
           cabal install fourmolu cabal-fmt --overwrite-policy=always --installdir="$HOME/.local/bin"
@@ -76,7 +92,16 @@ jobs:
           ghc-version: "9.8.4"
       # Weeder analyzes the LIBRARY surface (hie files). Executables are
       # smoke-tested by build + run; their roots are not part of the gate.
-      - run: cabal update && cabal build lib:omni-core
+      - name: cabal update (mirrors 403 intermittently; retry before failing)
+        run: |
+          for attempt in 1 2 3; do
+            if cabal update; then exit 0; fi
+            echo "cabal update attempt ${attempt} failed; retrying in 15s" >&2
+            sleep 15
+          done
+          echo "cabal update failed after 3 attempts" >&2
+          exit 1
+      - run: cabal build lib:omni-core
       - name: weeder (dead-code gate over hie files)
         run: |
           cabal install weeder --overwrite-policy=always --installdir="$HOME/.local/bin"
@@ -99,6 +124,14 @@ jobs:
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.8.4"
-      - run: cabal update
+      - name: cabal update (mirrors 403 intermittently; retry before failing)
+        run: |
+          for attempt in 1 2 3; do
+            if cabal update; then exit 0; fi
+            echo "cabal update attempt ${attempt} failed; retrying in 15s" >&2
+            sleep 15
+          done
+          echo "cabal update failed after 3 attempts" >&2
+          exit 1
       - run: ./scripts/build.sh
       - run: make bench

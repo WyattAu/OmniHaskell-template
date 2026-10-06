@@ -22,7 +22,15 @@ jobs:
       - uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.8.4"
-      - run: cabal update
+      - name: cabal update (mirrors 403 intermittently; retry before failing)
+        run: |
+          for attempt in 1 2 3; do
+            if cabal update; then exit 0; fi
+            echo "cabal update attempt ${attempt} failed; retrying in 15s" >&2
+            sleep 15
+          done
+          echo "cabal update failed after 3 attempts" >&2
+          exit 1
       - name: haddock
         run: |
           cabal haddock all --haddock-hyperlink-source --haddock-internal
