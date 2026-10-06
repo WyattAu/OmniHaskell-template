@@ -81,3 +81,12 @@ The first run on a fresh clone records the baseline instead of failing, so the
 gate is meaningful from the second run onwards. Override the budget per run
 with `OMNI_BENCH_THRESHOLD_PCT=15 make bench`. Rationale and per-template
 metrics: `docs/adr/0006-performance-budget-gate.md`.
+
+
+## Determinism
+
+`make repro` builds twice from a clean state with a pinned `SOURCE_DATE_EPOCH`
+and compares artifact hashes. Toolchains that are deterministic gate the build;
+toolchains that embed timestamps or build ids by design report the difference
+and explain why, rather than pretending to be reproducible. Rationale and the
+per-toolchain split: `docs/adr/0007-determinism-verification.md`.

@@ -24,6 +24,8 @@ $3
 
 - `make bench` (perf budget vs committed baseline) / `make bench-update`
 
+- `make repro` (build twice, compare artifact hashes)
+
 ## Conventions
 
 - Commits: conventional prefixes (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).

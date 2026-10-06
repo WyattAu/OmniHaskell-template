@@ -135,3 +135,17 @@ jobs:
           exit 1
       - run: ./scripts/build.sh
       - run: make bench
+
+  # Loop 3: determinism verification. Advisory for one loop, then blocking where
+  # the toolchain is deterministic (LOOP.md graduation policy). Same
+  # scripts/ command a developer runs locally.
+  repro:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.8.4"
+      - run: cabal update
+      - run: make repro
