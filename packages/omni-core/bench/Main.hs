@@ -4,19 +4,16 @@
 -- measurements against the committed baseline in @bench/baseline.tsv@ using the
 -- estate's shared comparator (mean + sample spread, gated with a noise band).
 --
--- Three details matter for the numbers to mean anything:
+-- Two details matter for the numbers to mean anything:
 --
--- * The work happens /inside/ the measured action. A @where@-bound CAF computed
---   once and merely returned reported ~4ns for a batch of 10,000 clamps.
--- * @nfIO@ takes the whole input list (@[a] -> IO b@) and cycles it internally,
---   so every iteration gets a fresh list and nothing can be hoisted into a
---   shared thunk.
--- * @mapMaybe@ instead of a partial combinator, because @-Werror@ and the
---   estate's total-function policy apply to benchmarks too.
+-- * The work happens /inside/ the measured action. A top-level CAF that is only
+--   returned reported ~4ns for a batch of 1,000 clamps; @evaluate@ forces the
+--   batch to be recomputed on every iteration.
+-- * The batch is big enough that timer and loop overhead do not dominate.
 module Main (main) where
 
 import Control.Exception (evaluate)
-import Criterion.Main (bench, bgroup, defaultMain, nfIO)
+import Criterion.Main (bench, bgroup, defaultMain, whnfIO)
 import Data.Maybe (mapMaybe)
 import Omni.Core (clamp, safeHead)
 
@@ -24,7 +21,8 @@ import Omni.Core (clamp, safeHead)
 clampBatch :: [Int] -> Int
 clampBatch = sum . map (clamp 0 100)
 
--- | REQ-001 on the hot path: total head over the whole batch.
+-- | REQ-001 on the hot path: total head over the whole batch. @mapMaybe@ keeps
+-- this partial-free, benchmark included.
 consBatch :: [Int] -> Int
 consBatch xs = length (mapMaybe (safeHead . (: [])) xs)
 
@@ -33,7 +31,7 @@ main =
   defaultMain
     [ bgroup
         "omni-core"
-        [ bench "clamp/batch" (nfIO (evaluate . clampBatch))
-        , bench "safeHead/cons" (nfIO (evaluate . consBatch))
+        [ bench "clamp/batch1k" (whnfIO (evaluate (clampBatch [1 .. 1024 :: Int])))
+        , bench "safeHead/cons1k" (whnfIO (evaluate (consBatch [1 .. 1024 :: Int])))
         ]
     ]
