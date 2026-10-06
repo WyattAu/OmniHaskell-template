@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """Turn criterion's JSON report into the estate's benchmark TSV.
 
-criterion's report layout has changed between releases (and the shape depends on
-whether the report is the analysis file or the summary), so instead of hard-coding
-a path this walks the tree and picks up every node that carries a mean. Values
-are converted from criterion's seconds to nanoseconds, which is the unit the
-shared comparator works in.
+criterion's report layout has moved between releases, and two shapes are in the
+wild:
 
-Rows are `name<TAB>value<TAB>ns<TAB>gate<TAB>noise`; the noise column is
-criterion's standard deviation, which lets the comparator run its z-test instead
-of a naive percentage.
+* older: entries carrying `mean` / `stdDev` directly, sometimes nested one level
+  as `{point_estimate: ...}`;
+* 1.6.x: `["criterion", "<version>", [ {reportName, reportAnalysis: {anMean:
+  {estPoint, estError}}, ...} ]]`.
+
+So instead of hard-coding a path, this walks the tree, understands both shapes,
+and inherits the report name down into the analysis. Values are converted from
+criterion's seconds to nanoseconds, the unit the shared comparator works in.
+
+Rows are `name<TAB>value<TAB>ns<TAB>gate<TAB>noise`, where noise is criterion's
+standard deviation - that is what lets the comparator run its z-test instead of a
+naive percentage comparison.
 """
 
 from __future__ import annotations
@@ -18,21 +24,24 @@ import json
 import pathlib
 import sys
 
-MEAN_KEYS = ("mean", "meanEstimate", "estimate", "est")
-NAME_KEYS = ("name", "reportName", "benchmarkName", "id", "fullName")
-STDDEV_KEYS = ("stdDev", "std_dev", "stddev")
+MEAN_KEYS = ("anMean", "mean", "meanEstimate", "estimate", "est")
+STDDEV_KEYS = ("anStdDev", "stdDev", "std_dev", "stddev")
+NAME_KEYS = ("reportName", "name", "benchmarkName", "id", "fullName")
+POINT_KEYS = ("estPoint", "point_estimate", "estimate", "centred", "mean")
+ANALYSIS_CONTAINERS = ("reportAnalysis", "analysis", "report")
 
 
-def scalar(node: dict, keys: tuple[str, ...]) -> float | None:
-    """Read a numeric field, descending one level when criterion nests it."""
+def estimate(node: dict, keys: tuple[str, ...]) -> float | None:
+    """Read a number, descending through criterion's Estimate wrappers."""
     for key in keys:
         if key not in node:
             continue
         value = node[key]
         if isinstance(value, dict):
-            for inner in ("point_estimate", "estimate", "centred", "mean"):
-                if inner in value and isinstance(value[inner], (int, float)):
-                    return float(value[inner])
+            for inner in POINT_KEYS:
+                inner_value = value.get(inner)
+                if isinstance(inner_value, (int, float)):
+                    return float(inner_value)
             continue
         if isinstance(value, (int, float)):
             return float(value)
@@ -47,18 +56,26 @@ def name_of(node: dict, fallback: str) -> str:
     return fallback
 
 
-def walk(node, trail: str = "report"):
-    """Yield (name, seconds, node) for every mean-bearing entry."""
+def walk(node, trail: str = "report", inherited: str | None = None):
+    """Yield (name, seconds, stddev) for every mean-bearing entry."""
     if isinstance(node, dict):
-        mean = scalar(node, MEAN_KEYS)
+        name = name_of(node, inherited or trail)
+        mean = estimate(node, MEAN_KEYS)
         if mean is not None:
-            yield name_of(node, trail), mean, node
+            yield name, mean, estimate(node, STDDEV_KEYS) or 0.0
             return
+        for container in ANALYSIS_CONTAINERS:
+            child = node.get(container)
+            if isinstance(child, dict):
+                mean = estimate(child, MEAN_KEYS)
+                if mean is not None:
+                    yield name, mean, estimate(child, STDDEV_KEYS) or 0.0
+                    return
         for key, value in node.items():
-            yield from walk(value, f"{trail}/{key}")
+            yield from walk(value, f"{trail}/{key}", inherited=name)
     elif isinstance(node, list):
         for index, value in enumerate(node):
-            yield from walk(value, f"{trail}[{index}]")
+            yield from walk(value, f"{trail}[{index}]", inherited)
 
 
 def main(argv: list[str]) -> int:
@@ -69,22 +86,13 @@ def main(argv: list[str]) -> int:
     data = json.loads(report.read_text())
 
     rows: dict[str, tuple[float, float]] = {}
-    for name, seconds, node in walk(data):
-        stddev = scalar(node, STDDEV_KEYS) or 0.0
+    for name, seconds, stddev in walk(data):
         rows[name] = (seconds * 1e9, stddev * 1e9)
 
     if not rows:
-        shape = (
-            list(data)[:8]
-            if isinstance(data, dict)
-            else [list(entry)[:8] for entry in data[:2]]
-            if isinstance(data, list)
-            else type(data).__name__
-        )
         raw = report.read_text()[:400]
         print(
             f"emit-criterion-bench: no measurements in {report}\n"
-            f"  shape: {shape}\n"
             f"  first bytes: {raw!r}",
             file=sys.stderr,
         )
