@@ -28,9 +28,9 @@ compare() {
   exit 0
 }
 
-# GHC writes build timestamps into interface files, so a mismatch here is
-# expected on every run. This reports it so the gap stays visible; upgrading the
-# toolchain (or Nix-shelling the build) is what would make it gateable.
+# Measured: GHC 9.8 `.hi` files hash identically across two from-scratch builds,
+# so this gates. The comment stays because the assumption used to be the opposite
+# and was wrong.
 fingerprint() {
   cabal build all >/dev/null
   find dist-newstyle -name '*.hi' -print0 | sort -z | xargs -0 sha256sum | awk '{print $1, $2}'

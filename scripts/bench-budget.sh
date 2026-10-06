@@ -17,6 +17,10 @@ mkdir -p bench
 # short.
 OUT="$PWD/bench/criterion.json"
 mkdir -p bench
+# Opt into the benchmark component for this run only (cabal.project keeps
+# `benchmarks: False` so normal builds never solve for criterion).
+printf 'package omni-core\n  benchmarks: True\n' >cabal.project.local
+trap 'rm -f cabal.project.local' EXIT
 cabal bench omni-core-bench --benchmark-options="--json $OUT --time-limit 0.5"
 
 python3 - <<'PYEMIT' >"$CURRENT"
