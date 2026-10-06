@@ -16,7 +16,7 @@
 module Main (main) where
 
 import Criterion.Main (bench, bgroup, defaultConfig, defaultMainWith, nf)
-import Criterion.Types (Verbosity (Quiet), jsonFile, timeLimit, verbosity)
+import Criterion.Types (Verbosity (Normal), jsonFile, timeLimit, verbosity)
 import Data.Maybe (mapMaybe)
 import Omni.Core (clamp, safeHead)
 
@@ -37,7 +37,7 @@ main =
         -- than assuming a location.
         jsonFile = Just "criterion.json"
       , timeLimit = 0.5
-      , verbosity = Quiet
+      , verbosity = Normal
       }
     [ bgroup
         "omni-core"

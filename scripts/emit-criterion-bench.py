@@ -81,7 +81,13 @@ def main(argv: list[str]) -> int:
             if isinstance(data, list)
             else type(data).__name__
         )
-        print(f"emit-criterion-bench: no measurements in {report}; shape: {shape}", file=sys.stderr)
+        raw = report.read_text()[:400]
+        print(
+            f"emit-criterion-bench: no measurements in {report}\n"
+            f"  shape: {shape}\n"
+            f"  first bytes: {raw!r}",
+            file=sys.stderr,
+        )
         return 1
 
     for name, (value, noise) in sorted(rows.items()):
