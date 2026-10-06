@@ -10,7 +10,7 @@
 -- so nothing here can be optimised away.
 module Main (main) where
 
-import Criterion.Main (bench, bgroup, whnfIO)
+import Criterion.Main (bench, bgroup, defaultMain, whnfIO)
 import Data.Maybe (mapMaybe)
 import Omni.Core (clamp, safeHead)
 
@@ -25,8 +25,10 @@ consBatch = length (mapMaybe (safeHead . (: [])) [1 .. 1000])
 
 main :: IO ()
 main =
-  bgroup
-    "omni-core"
-    [ bench "clamp/batch10k" (whnfIO (pure clampBatch))
-    , bench "safeHead/cons1000" (whnfIO (pure consBatch))
+  defaultMain
+    [ bgroup
+        "omni-core"
+        [ bench "clamp/batch10k" (whnfIO (pure clampBatch))
+        , bench "safeHead/cons1000" (whnfIO (pure consBatch))
+        ]
     ]
