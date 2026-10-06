@@ -21,7 +21,7 @@ clampBatch = sum (map (clamp 0 100) [1 .. 10_000])
 -- | REQ-001 on the hot path: a thousand total head calls, counted via @mapMaybe@
 -- (no partial functions anywhere, including in the benchmark).
 consBatch :: Int
-consBatch = length (mapMaybe (safeHead . (: [])) [1 .. 1000])
+consBatch = length (mapMaybe (safeHead . (: [])) [1 .. 1000 :: Int])
 
 main :: IO ()
 main =
