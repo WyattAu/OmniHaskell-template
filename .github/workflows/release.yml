@@ -24,8 +24,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     if: ${{ github.repository_owner == 'WyattAu' }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: haskell-actions/setup@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         with:
           ghc-version: ${{ matrix.ghc }}
       - run: cabal update && cabal build all --disable-benchmarks
@@ -35,10 +35,10 @@ jobs:
           mkdir -p dist
           cp "$BIN" dist/omni-app
           strip dist/omni-app || true
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: omni-app-${{ matrix.os }}
           path: dist/
-      - uses: actions/attest-build-provenance@v4
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
           subject-path: dist/omni-app
