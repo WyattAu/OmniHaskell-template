@@ -177,7 +177,8 @@ jobs:
       - run: pip install copier
       - name: byte-identical scaffold check
         run: |
-          git archive HEAD | mkdir -p "$RUNNER_TEMP/tracked" && tar -x -C "$RUNNER_TEMP/tracked" -f -
+          mkdir -p "$RUNNER_TEMP/tracked"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/tracked" -f -
           copier copy --defaults "$RUNNER_TEMP/tracked" "$RUNNER_TEMP/sc"
           diff -r --exclude=.copier-answers.yml --exclude=.git --exclude=copier.yml \
             "$RUNNER_TEMP/sc" "$RUNNER_TEMP/tracked"
