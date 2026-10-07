@@ -1,0 +1,11 @@
+# Copier question set — phase 1 of ADR-0001 (engineering-standards).
+# Content is not templated yet: this file establishes the answers contract and
+# the `copier update` channel. The acceptance test (CI job `scaffold`) proves
+# that `copier copy --defaults` reproduces this repo byte-for-byte.
+exclude:
+  - copier.yml
+
+project_name:
+  type: str
+  help: Project name used in answers and (once templated) content.
+  default: omni-project
