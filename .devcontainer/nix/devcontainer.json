@@ -4,7 +4,6 @@
   "name": "OmniHaskell-template (nix + flake shell)",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {}
   },
   "postCreateCommand": "bash .devcontainer/nix/bootstrap.sh && bash .devcontainer/nix/post-create.sh",
   "customizations": {
