@@ -25,6 +25,8 @@ jobs:
     if: ${{ github.repository_owner == 'WyattAu' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
       - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -42,3 +44,4 @@ jobs:
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
           subject-path: dist/omni-app
+

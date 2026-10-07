@@ -20,6 +20,8 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Run analysis
         uses: ossf/scorecard-action@f49aabe0b5af0936a0987cfb85d86b75731b0186 # v2.4.1
         with:
@@ -30,3 +32,4 @@ jobs:
         with:
           name: scorecard-sarif
           path: results.sarif
+
