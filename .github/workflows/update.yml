@@ -30,8 +30,8 @@ jobs:
       - run: pip install copier
       - name: copier update (no-op in the template repo)
         run: |
-          if [ ! -f .copier-answers.yml ]; then
-            echo "template-update: no .copier-answers.yml - this is the template repo; nothing to update"
+          if [ ! -f .copier-answers.yml ] || case "$GITHUB_REPOSITORY" in *-template) true;; *) false;; esac; then
+            echo "template-update: template repo (or no answers file) - nothing to update"
             exit 0
           fi
           git config user.name "omni-template-bot"
