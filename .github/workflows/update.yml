@@ -20,6 +20,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      # Replayed template changes include .github/workflows files; without this
+      # the GITHUB_TOKEN cannot push the update branch (GitHub rejects it).
+      workflows: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
