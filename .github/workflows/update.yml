@@ -11,18 +11,17 @@ on:
     - cron: "0 5 * * 1"
   workflow_dispatch:
 
+# workflows:write must live at workflow level -- GitHub rejects it per-job.
+# Replayed template changes include .github/workflows files; without it the
+# GITHUB_TOKEN cannot push the update branch.
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
+  workflows: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      # Replayed template changes include .github/workflows files; without this
-      # the GITHUB_TOKEN cannot push the update branch (GitHub rejects it).
-      workflows: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
