@@ -1,4 +1,7 @@
 version: 2
+# NOTE for derived repos: action pins are template-managed. Close Dependabot's
+# github-actions PRs here -- updates arrive via the template update channel
+# (ADR-0001), which keeps the derived repo byte-consistent with the template.
 updates:
   # No dependabot ecosystem for cabal — pin discipline comes from
   # index-state in cabal.project and the monthly bitrot cron.
