@@ -179,5 +179,5 @@ jobs:
           mkdir -p "$RUNNER_TEMP/tracked"
           git archive HEAD | tar -x -C "$RUNNER_TEMP/tracked" -f -
           copier copy --defaults "$RUNNER_TEMP/tracked" "$RUNNER_TEMP/sc"
-          diff -r --exclude=.copier-answers.yml --exclude=.git --exclude=copier.yml \
+          diff -r --exclude=.copier-answers.yml --exclude=.copier-answers.yml.jinja --exclude=.git --exclude=copier.yml \
             "$RUNNER_TEMP/sc" "$RUNNER_TEMP/tracked"
