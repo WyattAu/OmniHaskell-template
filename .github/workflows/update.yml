@@ -1,9 +1,13 @@
 # Template update channel (ADR-0001 phase 2, engineering-standards).
 # In a DERIVED repo: weekly, `copier update` replays template changes and this
-# workflow opens a PR with them. In the TEMPLATE repo itself there is no
-# .copier-answers.yml, so the job exits clean - ship once, works everywhere.
+# workflow opens a PR with them. In the TEMPLATE repo itself the answers file
+# does not render, so the job exits clean - ship once, works everywhere.
 #
-# persist-credentials: true is deliberate here: copier update commits locally.
+# Platform rule: GITHUB_TOKEN can NEVER push changes to .github/workflows/*
+# (the workflows scope is denied to it by design; no permissions block lifts
+# it). Derived repos that should receive workflow-file updates set the
+# UPDATE_TOKEN repo secret (PAT with the `workflow` scope); without it,
+# workflow-file updates fail loudly with instructions instead of silently.
 name: template-update
 
 on:
@@ -11,26 +15,28 @@ on:
     - cron: "0 5 * * 1"
   workflow_dispatch:
 
-# workflows:write must live at workflow level -- GitHub rejects it per-job.
-# Replayed template changes include .github/workflows files; without it the
-# GITHUB_TOKEN cannot push the update branch.
 permissions:
-  contents: write
-  pull-requests: write
-  workflows: write
+  contents: read
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      HAS_UPDATE_TOKEN: ${{ secrets.UPDATE_TOKEN != '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: true
+          token: ${{ secrets.UPDATE_TOKEN || github.token }}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-      - run: pip install copier
+      - run: pip install "copier>=9.18,<10"
       - name: copier update (no-op in the template repo)
+        id: update
         run: |
           if [ ! -f .copier-answers.yml ] || case "$GITHUB_REPOSITORY" in *-template) true;; *) false;; esac; then
             echo "template-update: template repo (or no answers file) - nothing to update"
@@ -39,9 +45,22 @@ jobs:
           git config user.name "omni-template-bot"
           git config user.email "wyatt_au@protonmail.com"
           copier update --defaults
+          echo "changed=$(git status --porcelain | wc -l)" >> "$GITHUB_OUTPUT"
+          echo "workflow_changes=$(git status --porcelain -- .github/workflows | wc -l)" >> "$GITHUB_OUTPUT"
+      - name: workflow-file updates require UPDATE_TOKEN (platform rule)
+        if: steps.update.outputs.workflow_changes != '0' && env.HAS_UPDATE_TOKEN == 'false'
+        run: |
+          echo "::error::The replayed template update touches .github/workflows/*."
+          echo "::error::GITHUB_TOKEN can never push workflow files - GitHub denies it"
+          echo "::error::the workflows scope by design, so no permissions block fixes this."
+          echo "::error::Add an UPDATE_TOKEN repo secret (PAT with the workflow scope)"
+          echo "::error::to this derived repo to receive workflow-file updates."
+          exit 1
       - name: open update PR
+        if: steps.update.outputs.changed != '0'
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         with:
+          token: ${{ secrets.UPDATE_TOKEN || github.token }}
           branch: template-update
           delete-branch: true
           title: "chore: apply template updates (copier update)"
