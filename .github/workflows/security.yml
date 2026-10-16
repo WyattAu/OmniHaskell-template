@@ -7,6 +7,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  # merge_group: GitHub merge queues validate a grouped future state of main;
+  # without this trigger the queue would wait forever for checks that never
+  # report (research note 39). No-op until the owner enables the queue.
+  merge_group:
   schedule:
     - cron: "0 8 * * 5" # Fridays 08:00 UTC
 
